@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  id               String    @id @default(cuid())
+  name             String
+  state            String
+  country          String    @default("US")
+  slug             String    @unique
+  permitInfoJson   Json?     @map("permit_info_json")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  contractors      Contractor[]
+  leads            Lead[]
+  permitRequirements PermitRequirement[]
+
+  @@map("cities")
+}
+
+model Project {
+  id                     String    @id @default(cuid())
+  name                   String
+  slug                   String    @unique
+  typicalPermitsRequired Json?     @map("typical_permits_required")
+  description            String?
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  leads                  Lead[]
+  permitRequirements     PermitRequirement[]
+
+  @@map("projects")
+}
+
+model Contractor {
+  id               String    @id @default(cuid())
+  businessName     String    @map("business_name")
+  contactEmail     String    @map("contact_email")
+  contactPhone     String?   @map("contact_phone")
+  licenseNumber    String?   @map("license_number")
+  subscriptionTier String    @default("free") @map("subscription_tier") // free, premium
+  cityId           String    @map("city_id")
+  specialties      String[]  @default([])
+  isVerified       Boolean   @default(false) @map("is_verified")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  city             City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  leadMatches      LeadContractorMatch[]
+
+  @@map("contractors")
+}
+
+model Lead {
+  id            String    @id @default(cuid())
+  homeownerName String    @map("homeowner_name")
+  email         String
+  phone         String?
+  projectType   String    @map("project_type")
+  projectDescription String? @map("project_description")
+  budget        String?
+  timeline      String?
+  cityId        String    @map("city_id")
+  projectId     String?   @map("project_id")
+  status        String    @default("new") // new, matched, converted, closed
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  city          City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  project       Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  contractorMatches LeadContractorMatch[]
+
+  @@map("leads")
+}
+
+model LeadContractorMatch {
+  id           String    @id @default(cuid())
+  leadId       String    @map("lead_id")
+  contractorId String    @map("contractor_id")
+  matchedAt    DateTime  @default(now()) @map("matched_at")
+  price        Decimal?  // Amount contractor paid for this lead
+  status       String    @default("pending") // pending, contacted, converted, declined
+
+  // Relations
+  lead         Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  contractor   Contractor @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@unique([leadId, contractorId])
+  @@map("lead_contractor_matches")
+}
+
+model PermitRequirement {
+  id              String    @id @default(cuid())
+  cityId          String    @map("city_id")
+  projectId       String    @map("project_id")
+  requirementsJson Json     @map("requirements_json")
+  estimatedCost   String?   @map("estimated_cost")
+  estimatedTimeline String? @map("estimated_timeline")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  city            City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([cityId, projectId])
+  @@map("permit_requirements")
+}
