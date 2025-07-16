@@ -22,7 +22,47 @@ const getCityAndProjectData = (citySlug: string, projectType: string) => {
     'san-antonio-tx': 'San Antonio, TX',
     'san-diego-ca': 'San Diego, CA',
     'dallas-tx': 'Dallas, TX',
-    'austin-tx': 'Austin, TX'
+    'austin-tx': 'Austin, TX',
+    'san-jose-ca': 'San Jose, CA',
+    'fort-worth-tx': 'Fort Worth, TX',
+    'jacksonville-fl': 'Jacksonville, FL',
+    'columbus-oh': 'Columbus, OH',
+    'charlotte-nc': 'Charlotte, NC',
+    'san-francisco-ca': 'San Francisco, CA',
+    'indianapolis-in': 'Indianapolis, IN',
+    'seattle-wa': 'Seattle, WA',
+    'denver-co': 'Denver, CO',
+    'washington-dc': 'Washington, DC',
+    'boston-ma': 'Boston, MA',
+    'el-paso-tx': 'El Paso, TX',
+    'nashville-tn': 'Nashville, TN',
+    'detroit-mi': 'Detroit, MI',
+    'oklahoma-city-ok': 'Oklahoma City, OK',
+    'portland-or': 'Portland, OR',
+    'las-vegas-nv': 'Las Vegas, NV',
+    'memphis-tn': 'Memphis, TN',
+    'louisville-ky': 'Louisville, KY',
+    'baltimore-md': 'Baltimore, MD',
+    'milwaukee-wi': 'Milwaukee, WI',
+    'albuquerque-nm': 'Albuquerque, NM',
+    'tucson-az': 'Tucson, AZ',
+    'fresno-ca': 'Fresno, CA',
+    'mesa-az': 'Mesa, AZ',
+    'sacramento-ca': 'Sacramento, CA',
+    'atlanta-ga': 'Atlanta, GA',
+    'kansas-city-mo': 'Kansas City, MO',
+    'colorado-springs-co': 'Colorado Springs, CO',
+    'miami-fl': 'Miami, FL',
+    'raleigh-nc': 'Raleigh, NC',
+    'omaha-ne': 'Omaha, NE',
+    'long-beach-ca': 'Long Beach, CA',
+    'virginia-beach-va': 'Virginia Beach, VA',
+    'oakland-ca': 'Oakland, CA',
+    'minneapolis-mn': 'Minneapolis, MN',
+    'tulsa-ok': 'Tulsa, OK',
+    'tampa-fl': 'Tampa, FL',
+    'arlington-tx': 'Arlington, TX',
+    'new-orleans-la': 'New Orleans, LA'
   };
 
   const projectMap: { [key: string]: string } = {
@@ -49,6 +89,7 @@ export default function ProjectGetMatchedPage({ params }: ProjectGetMatchedPageP
   const [projectType, setProjectType] = useState('');
   const [cityName, setCityName] = useState('');
   const [projectName, setProjectName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -65,8 +106,8 @@ export default function ProjectGetMatchedPage({ params }: ProjectGetMatchedPageP
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Use React 19 pattern for handling async params
-  React.use(
+  // Handle async params with useEffect
+  React.useEffect(() => {
     params.then((resolvedParams) => {
       const slug = resolvedParams['city-slug'];
       const project = resolvedParams['project-type'];
@@ -74,15 +115,18 @@ export default function ProjectGetMatchedPage({ params }: ProjectGetMatchedPageP
       
       if (!data) {
         notFound();
+        return;
       }
       
       setCitySlug(slug);
       setProjectType(project);
       setCityName(data.cityName);
       setProjectName(data.projectName);
-      return resolvedParams;
-    })
-  );
+      setIsLoading(false);
+    }).catch(() => {
+      notFound();
+    });
+  }, [params]);
 
   const timelineOptions = [
     'ASAP (within 1 month)',
@@ -174,7 +218,7 @@ export default function ProjectGetMatchedPage({ params }: ProjectGetMatchedPageP
     }
   };
 
-  if (!cityName || !projectName) {
+  if (isLoading || !cityName || !projectName) {
     return <div>Loading...</div>;
   }
 
