@@ -104,27 +104,40 @@ export default function GetMatchedPage({ params }: GetMatchedPageProps) {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call - in real implementation, this would save to database
-      // and send notifications to matched contractors
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Here you would:
-      // 1. Save lead to database
-      // 2. Find matching contractors in the city
-      // 3. Send notifications to contractors
-      // 4. Send confirmation email to homeowner
-      
-      console.log('Lead submitted:', {
-        ...formData,
-        city: cityName,
-        citySlug: citySlug,
-        submittedAt: new Date().toISOString()
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          projectType: formData.projectType,
+          projectDescription: formData.projectDescription,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          propertyType: formData.propertyType,
+          homeOwnership: formData.homeOwnership,
+          citySlug: citySlug,
+          projectSlug: null,
+          permitHelp: formData.permitHelp,
+          additionalServices: formData.additionalServices
+        }),
       });
-      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit request');
+      }
+
+      const result = await response.json();
+      console.log('Lead submitted successfully:', result);
       setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting lead:', error);
-      alert('There was an error submitting your request. Please try again.');
+      alert(`There was an error submitting your request: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setIsSubmitting(false);
     }

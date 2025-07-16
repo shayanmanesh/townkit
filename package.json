@@ -13,7 +13,8 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "deploy": "npm run build && vercel --prod",
-    "setup:production": "npm run db:generate && npm run db:migrate && npm run db:seed"
+    "setup:production": "npm run db:generate && npm run db:migrate && npm run db:seed",
+    "vercel:seed": "vercel env pull .env.production && npm run db:generate && npm run db:migrate && npm run db:seed"
   },
   "dependencies": {
     "react": "19.1.0",

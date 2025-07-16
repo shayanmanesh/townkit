@@ -135,22 +135,40 @@ export default function ProjectGetMatchedPage({ params }: ProjectGetMatchedPageP
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      console.log('Project-specific lead submitted:', {
-        ...formData,
-        city: cityName,
-        citySlug: citySlug,
-        projectType: projectName,
-        projectSlug: projectType,
-        submittedAt: new Date().toISOString()
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          projectType: projectName,
+          projectDescription: formData.projectDescription,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          propertyType: formData.propertyType,
+          homeOwnership: formData.homeOwnership,
+          citySlug: citySlug,
+          projectSlug: projectType,
+          permitHelp: formData.permitHelp,
+          additionalServices: formData.additionalServices
+        }),
       });
-      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit request');
+      }
+
+      const result = await response.json();
+      console.log('Lead submitted successfully:', result);
       setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting lead:', error);
-      alert('There was an error submitting your request. Please try again.');
+      alert(`There was an error submitting your request: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setIsSubmitting(false);
     }
