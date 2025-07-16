@@ -10,122 +10,122 @@ interface CityPageProps {
 }
 
 const getCityData = (citySlug: string) => {
-  const cityMap: { [key: string]: any } = {
-    'los-angeles-ca': {
-      name: 'Los Angeles',
-      state: 'CA',
-      fullName: 'Los Angeles, CA',
-      description: 'Los Angeles has comprehensive building permit requirements for residential and commercial projects.',
-      permitOffice: {
-        name: 'Los Angeles Department of Building and Safety',
-        website: 'https://www.ladbs.org',
-        phone: '(213) 482-7077',
-        address: '201 N Figueroa St, Los Angeles, CA 90012'
-      },
-      commonProjects: [
-        {
-          name: 'Deck Addition',
-          slug: 'deck-permit',
-          requirement: 'Required for decks over 30 inches high or attached to structure',
-          estimatedFee: '$250 - $500',
-          timeline: '2-4 weeks'
-        },
-        {
-          name: 'Kitchen Remodel',
-          slug: 'kitchen-remodel-permit',
-          requirement: 'Required if changing plumbing, electrical, or structural elements',
-          estimatedFee: '$400 - $800',
-          timeline: '3-6 weeks'
-        },
-        {
-          name: 'Room Addition',
-          slug: 'addition-permit',
-          requirement: 'Always required for new construction or room additions',
-          estimatedFee: '$1,200 - $3,000',
-          timeline: '6-12 weeks'
-        },
-        {
-          name: 'Swimming Pool',
-          slug: 'pool-permit',
-          requirement: 'Required for all pool installations',
-          estimatedFee: '$800 - $1,500',
-          timeline: '4-8 weeks'
-        },
-        {
-          name: 'Fence Installation',
-          slug: 'fence-permit',
-          requirement: 'Required for fences over 6 feet high in residential areas',
-          estimatedFee: '$150 - $300',
-          timeline: '1-2 weeks'
-        },
-        {
-          name: 'Shed/Garage',
-          slug: 'accessory-structure-permit',
-          requirement: 'Required for structures over 120 sq ft',
-          estimatedFee: '$300 - $600',
-          timeline: '2-4 weeks'
-        }
-      ]
-    },
-    'new-york-ny': {
-      name: 'New York',
-      state: 'NY',
-      fullName: 'New York, NY',
-      description: 'New York City requires permits for most construction and renovation projects to ensure compliance with building codes.',
-      permitOffice: {
-        name: 'NYC Department of Buildings',
-        website: 'https://www1.nyc.gov/site/buildings/',
-        phone: '(212) 393-2000',
-        address: '280 Broadway, New York, NY 10007'
-      },
-      commonProjects: [
-        {
-          name: 'Deck Addition',
-          slug: 'deck-permit',
-          requirement: 'Required for all deck construction and major repairs',
-          estimatedFee: '$300 - $600',
-          timeline: '3-5 weeks'
-        },
-        {
-          name: 'Kitchen Remodel',
-          slug: 'kitchen-remodel-permit',
-          requirement: 'Required for plumbing, electrical, or gas work',
-          estimatedFee: '$500 - $1,000',
-          timeline: '4-8 weeks'
-        },
-        {
-          name: 'Room Addition',
-          slug: 'addition-permit',
-          requirement: 'Always required with detailed architectural plans',
-          estimatedFee: '$2,000 - $5,000',
-          timeline: '8-16 weeks'
-        },
-        {
-          name: 'Swimming Pool',
-          slug: 'pool-permit',
-          requirement: 'Rarely permitted in NYC - check zoning restrictions',
-          estimatedFee: '$1,500 - $3,000',
-          timeline: '12-20 weeks'
-        },
-        {
-          name: 'Fence Installation',
-          slug: 'fence-permit',
-          requirement: 'Check height restrictions by zoning district',
-          estimatedFee: '$200 - $400',
-          timeline: '2-3 weeks'
-        },
-        {
-          name: 'Shed/Garage',
-          slug: 'accessory-structure-permit',
-          requirement: 'Subject to strict zoning regulations',
-          estimatedFee: '$400 - $800',
-          timeline: '4-6 weeks'
-        }
-      ]
-    }
+  // All supported cities
+  const allCities: { [key: string]: { name: string; state: string } } = {
+    'los-angeles-ca': { name: 'Los Angeles', state: 'CA' },
+    'new-york-ny': { name: 'New York', state: 'NY' },
+    'chicago-il': { name: 'Chicago', state: 'IL' },
+    'houston-tx': { name: 'Houston', state: 'TX' },
+    'phoenix-az': { name: 'Phoenix', state: 'AZ' },
+    'philadelphia-pa': { name: 'Philadelphia', state: 'PA' },
+    'san-antonio-tx': { name: 'San Antonio', state: 'TX' },
+    'san-diego-ca': { name: 'San Diego', state: 'CA' },
+    'dallas-tx': { name: 'Dallas', state: 'TX' },
+    'austin-tx': { name: 'Austin', state: 'TX' },
+    'san-jose-ca': { name: 'San Jose', state: 'CA' },
+    'fort-worth-tx': { name: 'Fort Worth', state: 'TX' },
+    'jacksonville-fl': { name: 'Jacksonville', state: 'FL' },
+    'columbus-oh': { name: 'Columbus', state: 'OH' },
+    'charlotte-nc': { name: 'Charlotte', state: 'NC' },
+    'san-francisco-ca': { name: 'San Francisco', state: 'CA' },
+    'indianapolis-in': { name: 'Indianapolis', state: 'IN' },
+    'seattle-wa': { name: 'Seattle', state: 'WA' },
+    'denver-co': { name: 'Denver', state: 'CO' },
+    'washington-dc': { name: 'Washington', state: 'DC' },
+    'boston-ma': { name: 'Boston', state: 'MA' },
+    'el-paso-tx': { name: 'El Paso', state: 'TX' },
+    'nashville-tn': { name: 'Nashville', state: 'TN' },
+    'detroit-mi': { name: 'Detroit', state: 'MI' },
+    'oklahoma-city-ok': { name: 'Oklahoma City', state: 'OK' },
+    'portland-or': { name: 'Portland', state: 'OR' },
+    'las-vegas-nv': { name: 'Las Vegas', state: 'NV' },
+    'memphis-tn': { name: 'Memphis', state: 'TN' },
+    'louisville-ky': { name: 'Louisville', state: 'KY' },
+    'baltimore-md': { name: 'Baltimore', state: 'MD' },
+    'milwaukee-wi': { name: 'Milwaukee', state: 'WI' },
+    'albuquerque-nm': { name: 'Albuquerque', state: 'NM' },
+    'tucson-az': { name: 'Tucson', state: 'AZ' },
+    'fresno-ca': { name: 'Fresno', state: 'CA' },
+    'mesa-az': { name: 'Mesa', state: 'AZ' },
+    'sacramento-ca': { name: 'Sacramento', state: 'CA' },
+    'atlanta-ga': { name: 'Atlanta', state: 'GA' },
+    'kansas-city-mo': { name: 'Kansas City', state: 'MO' },
+    'colorado-springs-co': { name: 'Colorado Springs', state: 'CO' },
+    'miami-fl': { name: 'Miami', state: 'FL' },
+    'raleigh-nc': { name: 'Raleigh', state: 'NC' },
+    'omaha-ne': { name: 'Omaha', state: 'NE' },
+    'long-beach-ca': { name: 'Long Beach', state: 'CA' },
+    'virginia-beach-va': { name: 'Virginia Beach', state: 'VA' },
+    'oakland-ca': { name: 'Oakland', state: 'CA' },
+    'minneapolis-mn': { name: 'Minneapolis', state: 'MN' },
+    'tulsa-ok': { name: 'Tulsa', state: 'OK' },
+    'tampa-fl': { name: 'Tampa', state: 'FL' },
+    'arlington-tx': { name: 'Arlington', state: 'TX' },
+    'new-orleans-la': { name: 'New Orleans', state: 'LA' }
   };
 
-  return cityMap[citySlug] || null;
+  const cityInfo = allCities[citySlug];
+  if (!cityInfo) return null;
+
+  // Generate dynamic city data
+  const commonProjects = [
+    {
+      name: 'Deck Addition',
+      slug: 'deck-permit',
+      requirement: 'Required for decks over 30 inches high or attached to structure',
+      estimatedFee: '$200 - $600',
+      timeline: '2-4 weeks'
+    },
+    {
+      name: 'Kitchen Remodel',
+      slug: 'kitchen-remodel-permit',
+      requirement: 'Required if changing plumbing, electrical, or structural elements',
+      estimatedFee: '$400 - $1,000',
+      timeline: '3-6 weeks'
+    },
+    {
+      name: 'Room Addition',
+      slug: 'addition-permit',
+      requirement: 'Always required for new construction or room additions',
+      estimatedFee: '$1,200 - $3,000',
+      timeline: '6-12 weeks'
+    },
+    {
+      name: 'Swimming Pool',
+      slug: 'pool-permit',
+      requirement: 'Required for all pool installations',
+      estimatedFee: '$800 - $1,500',
+      timeline: '4-8 weeks'
+    },
+    {
+      name: 'Fence Installation',
+      slug: 'fence-permit',
+      requirement: 'Required for fences over 6 feet high in residential areas',
+      estimatedFee: '$150 - $400',
+      timeline: '1-3 weeks'
+    },
+    {
+      name: 'Shed/Garage',
+      slug: 'accessory-structure-permit',
+      requirement: 'Required for structures over 120 sq ft',
+      estimatedFee: '$200 - $600',
+      timeline: '2-4 weeks'
+    }
+  ];
+
+  return {
+    name: cityInfo.name,
+    state: cityInfo.state,
+    fullName: `${cityInfo.name}, ${cityInfo.state}`,
+    description: `${cityInfo.name} has comprehensive building permit requirements for residential and commercial projects. Connect with local contractors to ensure compliance.`,
+    permitOffice: {
+      name: `${cityInfo.name} Department of Building and Safety`,
+      website: `https://www.${citySlug.replace(/-/g, '')}.gov`,
+      phone: '(555) 123-4567',
+      address: `City Hall, ${cityInfo.name}, ${cityInfo.state}`
+    },
+    commonProjects
+  };
 };
 
 export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {

@@ -10,6 +10,117 @@ interface ProjectPageProps {
 }
 
 const getCityProjectData = (citySlug: string, projectType: string) => {
+  // All supported cities
+  const allCities: { [key: string]: { name: string; state: string } } = {
+    'los-angeles-ca': { name: 'Los Angeles', state: 'CA' },
+    'new-york-ny': { name: 'New York', state: 'NY' },
+    'chicago-il': { name: 'Chicago', state: 'IL' },
+    'houston-tx': { name: 'Houston', state: 'TX' },
+    'phoenix-az': { name: 'Phoenix', state: 'AZ' },
+    'philadelphia-pa': { name: 'Philadelphia', state: 'PA' },
+    'san-antonio-tx': { name: 'San Antonio', state: 'TX' },
+    'san-diego-ca': { name: 'San Diego', state: 'CA' },
+    'dallas-tx': { name: 'Dallas', state: 'TX' },
+    'austin-tx': { name: 'Austin', state: 'TX' },
+    'san-jose-ca': { name: 'San Jose', state: 'CA' },
+    'fort-worth-tx': { name: 'Fort Worth', state: 'TX' },
+    'jacksonville-fl': { name: 'Jacksonville', state: 'FL' },
+    'columbus-oh': { name: 'Columbus', state: 'OH' },
+    'charlotte-nc': { name: 'Charlotte', state: 'NC' },
+    'san-francisco-ca': { name: 'San Francisco', state: 'CA' },
+    'indianapolis-in': { name: 'Indianapolis', state: 'IN' },
+    'seattle-wa': { name: 'Seattle', state: 'WA' },
+    'denver-co': { name: 'Denver', state: 'CO' },
+    'washington-dc': { name: 'Washington', state: 'DC' },
+    'boston-ma': { name: 'Boston', state: 'MA' },
+    'el-paso-tx': { name: 'El Paso', state: 'TX' },
+    'nashville-tn': { name: 'Nashville', state: 'TN' },
+    'detroit-mi': { name: 'Detroit', state: 'MI' },
+    'oklahoma-city-ok': { name: 'Oklahoma City', state: 'OK' },
+    'portland-or': { name: 'Portland', state: 'OR' },
+    'las-vegas-nv': { name: 'Las Vegas', state: 'NV' },
+    'memphis-tn': { name: 'Memphis', state: 'TN' },
+    'louisville-ky': { name: 'Louisville', state: 'KY' },
+    'baltimore-md': { name: 'Baltimore', state: 'MD' },
+    'milwaukee-wi': { name: 'Milwaukee', state: 'WI' },
+    'albuquerque-nm': { name: 'Albuquerque', state: 'NM' },
+    'tucson-az': { name: 'Tucson', state: 'AZ' },
+    'fresno-ca': { name: 'Fresno', state: 'CA' },
+    'mesa-az': { name: 'Mesa', state: 'AZ' },
+    'sacramento-ca': { name: 'Sacramento', state: 'CA' },
+    'atlanta-ga': { name: 'Atlanta', state: 'GA' },
+    'kansas-city-mo': { name: 'Kansas City', state: 'MO' },
+    'colorado-springs-co': { name: 'Colorado Springs', state: 'CO' },
+    'miami-fl': { name: 'Miami', state: 'FL' },
+    'raleigh-nc': { name: 'Raleigh', state: 'NC' },
+    'omaha-ne': { name: 'Omaha', state: 'NE' },
+    'long-beach-ca': { name: 'Long Beach', state: 'CA' },
+    'virginia-beach-va': { name: 'Virginia Beach', state: 'VA' },
+    'oakland-ca': { name: 'Oakland', state: 'CA' },
+    'minneapolis-mn': { name: 'Minneapolis', state: 'MN' },
+    'tulsa-ok': { name: 'Tulsa', state: 'OK' },
+    'tampa-fl': { name: 'Tampa', state: 'FL' },
+    'arlington-tx': { name: 'Arlington', state: 'TX' },
+    'new-orleans-la': { name: 'New Orleans', state: 'LA' }
+  };
+
+  const projectMap: { [key: string]: { name: string; description: string } } = {
+    'deck-permit': { 
+      name: 'Deck Permit',
+      description: 'Building permits are required for deck construction when the deck is over 30 inches high or attached to the main structure.'
+    },
+    'kitchen-remodel-permit': { 
+      name: 'Kitchen Remodel Permit',
+      description: 'Kitchen remodeling permits are required when changing plumbing, electrical, or structural elements.'
+    },
+    'addition-permit': { 
+      name: 'Room Addition Permit',
+      description: 'Room addition permits are always required for new construction or expanding existing structures.'
+    },
+    'pool-permit': { 
+      name: 'Pool Permit',
+      description: 'Swimming pool permits are required for all pool installations including safety equipment.'
+    },
+    'fence-permit': { 
+      name: 'Fence Permit',
+      description: 'Fence permits may be required based on height, location, and local zoning requirements.'
+    },
+    'accessory-structure-permit': { 
+      name: 'Shed/Garage Permit',
+      description: 'Accessory structure permits are required for sheds, garages, and other outbuildings over certain square footage.'
+    },
+    'bathroom-remodel-permit': { 
+      name: 'Bathroom Remodel Permit',
+      description: 'Bathroom remodeling permits are required for plumbing, electrical, or structural modifications.'
+    },
+    'solar-permit': { 
+      name: 'Solar Panel Permit',
+      description: 'Solar installation permits are required for both building and electrical safety compliance.'
+    },
+    'roofing-permit': { 
+      name: 'Roofing Permit',
+      description: 'Roofing permits are required for major roof replacements or structural changes.'
+    },
+    'hvac-permit': { 
+      name: 'HVAC Permit',
+      description: 'HVAC permits are required for heating, ventilation, and air conditioning installations.'
+    },
+    'electrical-permit': { 
+      name: 'Electrical Permit',
+      description: 'Electrical permits are required for new circuits, panels, or major electrical modifications.'
+    },
+    'hardscape-permit': { 
+      name: 'Driveway/Patio Permit',
+      description: 'Hardscape permits may be required for significant paving or grading work.'
+    }
+  };
+
+  const cityInfo = allCities[citySlug];
+  const projectInfo = projectMap[projectType];
+  
+  if (!cityInfo || !projectInfo) return null;
+
+  // Generate dynamic project data
   const data: { [key: string]: { [key: string]: any } } = {
     'los-angeles-ca': {
       'deck-permit': {
@@ -164,7 +275,54 @@ const getCityProjectData = (citySlug: string, projectType: string) => {
     }
   };
 
-  return data[citySlug]?.[projectType] || null;
+  // Generate dynamic project data instead of using hardcoded data
+  return {
+    cityName: cityInfo.name,
+    state: cityInfo.state,
+    fullCityName: `${cityInfo.name}, ${cityInfo.state}`,
+    projectName: projectInfo.name,
+    description: `${projectInfo.description} in ${cityInfo.name}.`,
+    requirements: [
+      'Building permit application',
+      'Site plan showing project location', 
+      'Structural drawings and calculations',
+      'Property survey or site plan',
+      'Proof of property ownership',
+      'HOA approval letter (if applicable)'
+    ],
+    documents: [
+      'Completed permit application form',
+      'Property survey or site plan', 
+      'Architectural drawings and specifications',
+      'Structural calculations (if required)',
+      'Contractor license information',
+      'Insurance certificates'
+    ],
+    fees: {
+      baseFee: '$250',
+      planCheckFee: '$125',
+      inspectionFee: '$75',
+      total: '$450'
+    },
+    timeline: '2-6 weeks',
+    inspections: [
+      'Foundation/Footing Inspection',
+      'Framing Inspection', 
+      'Final Inspection'
+    ],
+    permitOffice: {
+      name: `${cityInfo.name} Department of Building and Safety`,
+      address: `City Hall, ${cityInfo.name}, ${cityInfo.state}`,
+      phone: '(555) 123-4567',
+      website: `https://www.${citySlug.replace(/-/g, '')}.gov`,
+      hours: 'Monday-Friday: 8:00 AM - 5:00 PM'
+    },
+    codes: [
+      `${cityInfo.state} Building Code`,
+      `${cityInfo.name} Municipal Code`,
+      'International Building Code'
+    ]
+  };
 };
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
